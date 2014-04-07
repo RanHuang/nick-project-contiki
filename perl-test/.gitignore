@@ -1,0 +1,12 @@
+*.swp
+test*
+build/
+positions/
+filesbak/
+symbo*
+*.sky
+*.target
+*.csc
+project*
+
+
