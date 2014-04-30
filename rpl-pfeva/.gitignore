@@ -1,0 +1,13 @@
+*.swp
+*.bak
+*.csc
+test*
+build/
+positions/
+symbo*
+*.sky
+*.target
+udp*
+*.ok
+
+
