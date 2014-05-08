@@ -8,8 +8,7 @@
 //RAM consumption parameters
 #define MAX_PACKET_QUEUE_SIZE 	100
 #define MAX_ROUTING_TABLE_SIZE 	40
-#define USER_PACKET_CONF_SIZE 4  i
-/*Change this digital to adapt to the the packet size */
+#define USER_PACKET_CONF_SIZE 4
 
 #ifdef USER_PACKET_CONF_SIZE
   #define MAX_USER_PACKET_SIZE USER_PACKET_CONF_SIZE

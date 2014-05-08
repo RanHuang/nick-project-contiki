@@ -69,21 +69,19 @@ PROCESS_THREAD(main_process, ev, data)
   PROCESS_BEGIN();
     PRINTF("Hi function\n");
   counter_recv = counter = 0; 
-  bcp_open(&bcp, 146, &bcp_callbacks); //bcp<- bcp_conn
+  bcp_open(&bcp, 146, &bcp_callbacks);
 
-  //Set the sink node. 
-  //addr<- rimeaddr_t
+  //Set the sink node
   addr.u8[0] = 1;
   addr.u8[1] = 0;
   if(rimeaddr_cmp(&addr, &rimeaddr_node_addr)){
       bcp_set_sink(&bcp, true);
      
-      PRINTF("SET the SINK!\n");
       PRINTF("size of %d", sizeof(struct bcp_queue_item)*MAX_PACKET_QUEUE_SIZE);
   }else{
       //Set the sending timer
       ctimer_set(&send_data_timer, time_ee, sn, NULL);
-      PRINTF("SET the send timer!\n");
+      
   }
   
   PROCESS_END();

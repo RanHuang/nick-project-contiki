@@ -1,6 +1,6 @@
-CONTIKI = /home/user/contiki/
+CONTIKI = /home/user/contiki-2.6-2
 
-CONTIKI_PROJECT = sender sink 
+CONTIKI_PROJECT = main
 
 CONTIKI_SOURCEFILES += bcp.c bcp_routing_table.c bcp_queue.c bcp_weight_estimator.c bcp_queue_allocator.c 
 #Load our own project-conf to employ nullrdc driver
