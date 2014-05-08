@@ -1,0 +1,9 @@
+#
+*.csc
+*.txt
+*.target
+symbols*
+build/
+positions/
+outputs/
+*.dat
