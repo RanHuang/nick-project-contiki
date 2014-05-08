@@ -1,0 +1,11 @@
+#
+*.txt
+*.a
+*.map
+*.csc*
+*.target
+main.c
+symbol*
+position*/
+obj*/
+output*/
