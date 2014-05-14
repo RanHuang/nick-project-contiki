@@ -31,7 +31,7 @@ void sent_bcp(struct bcp_conn *c)
                 packetbuf_datalen());
 }
 /**********************************************************************/
-static const struct bcp_callbacks bcp_callbacks = {sent_bcp};
+static const struct bcp_callbacks bcp_callbacks = {NULL,sent_bcp,NULL};
 /**********************************************************************/
 PROCESS_THREAD(sender_process, ev, data)
 {

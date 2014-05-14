@@ -23,7 +23,7 @@ static void recv_bcp(struct bcp_conn *c, rimeaddr_t *from)
                 ++recv_num);
 }
 /**************************************************************************/
-static const struct bcp_callbacks bcp_callbacks = {recv_bcp};
+static const struct bcp_callbacks bcp_callbacks = {recv_bcp,NULL,NULL};
 PROCESS_THREAD(sink_process, ev, data)
 {
     PROCESS_BEGIN();
