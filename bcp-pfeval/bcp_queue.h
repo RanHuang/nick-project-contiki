@@ -35,6 +35,10 @@ struct bcp_packet_header {
      */
     uint16_t bcp_backpressure;
     /**
+     * Hop Count 
+     */
+    uint8_t hopCount;
+    /**
      * The addressed of the node which generated the packet
      */
     rimeaddr_t origin;

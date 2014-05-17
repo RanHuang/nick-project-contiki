@@ -12,7 +12,7 @@ static struct bcp_conn bcp;
 PROCESS(sink_process, "Sink process");
 AUTOSTART_PROCESSES(&sink_process);
 /************************************************************************/
-static void recv_bcp(struct bcp_conn *c, rimeaddr_t *from)
+static void recv_bcp(struct bcp_conn *c, rimeaddr_t *from, uint8_t hopCount)
 {
     static uint16_t recv_num = 0;
     PRINTF("RECV callback.");
@@ -21,6 +21,7 @@ static void recv_bcp(struct bcp_conn *c, rimeaddr_t *from)
                 from->u8[0],
                 from->u8[1],
                 ++recv_num);
+    PRINTF("Hops = %u\n", hopCount);
 }
 /**************************************************************************/
 static const struct bcp_callbacks bcp_callbacks = {recv_bcp,NULL,NULL};

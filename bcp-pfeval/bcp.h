@@ -33,13 +33,13 @@ struct bcp_callbacks {
    /**
    * Called when a packet is received on the connection.
    */
-  void (*recv)(struct bcp_conn *c, rimeaddr_t * from);
+  void (*recv)(struct bcp_conn *c, rimeaddr_t * from, uint8_t hopCount);
   
   /**
    * Called when a packet is sent on the bcp connection. Use packetbuf library to 
    * check packet details
    */
-  void (* sent)(struct bcp_conn *c);
+  void (* sent)(struct bcp_conn *c, uint8_t backpressure);
   
   /**
    * Called when a packet is dropped. Use packetbuf library to check packet 

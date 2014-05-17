@@ -94,6 +94,8 @@ struct bcp_queue_item * bcp_queue_push(struct bcp_queue *s, struct bcp_queue_ite
     //Sets the fields of the new record
     newRow->next = NULL;
     newRow->hdr.bcp_backpressure = 0;
+    newRow->hdr.hopCount = i->hdr.hopCount;
+    PRINTF("HOPCOUNT:func bcp_queue_push %d\n", newRow->hdr.hopCount);
     newRow->data_length = i->data_length;
     
     memcpy(newRow->data, i->data, newRow->data_length);

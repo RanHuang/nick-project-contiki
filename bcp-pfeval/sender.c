@@ -23,12 +23,13 @@ void send_packet(void *v)
     send_num ++;
 }
 /**********************************************************************/
-void sent_bcp(struct bcp_conn *c)
+void sent_bcp(struct bcp_conn *c, uint8_t backpressure)
 {
-    PRINTF("SENT callback.\n");
-    PRINTF("data='%s' length = %d\n",
+    PRINTF("SENT callback. ");
+    PRINTF("data='%s' length = %d backlog= %d\n",
                 (char*)packetbuf_dataptr(),
-                packetbuf_datalen());
+                packetbuf_datalen(),
+                backpressure);
 }
 /**********************************************************************/
 static const struct bcp_callbacks bcp_callbacks = {NULL,sent_bcp,NULL};
@@ -45,6 +46,8 @@ PROCESS_THREAD(sender_process, ev, data)
     etimer_set(&timer_period, SEND_INTERVAL);
     while(1)
     {
+        PROCESS_YIELD();
+
         if(etimer_expired(&timer_period))
         {
             etimer_reset(&timer_period);

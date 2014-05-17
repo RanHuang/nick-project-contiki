@@ -16,7 +16,7 @@
 #include <stddef.h>  //For offsetof
 #include "lib/list.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -115,7 +115,7 @@ static void recv_from_unicast(struct unicast_conn *c, const rimeaddr_t *from)
         if(bcp_conn->cb->sent != NULL){
             prepare_packetbuf();
             packetbuf_copyfrom(i->data, i->data_length);
-            bcp_conn->cb->sent(bcp_conn);        
+            bcp_conn->cb->sent(bcp_conn, (uint8_t)bcp_queue_length(&bcp_conn->packet_queue));        
         }
         
         //Stop retransmission timer
@@ -211,6 +211,7 @@ static void recv_from_broadcast(struct broadcast_conn *c,
                         bc->ce->onReceivingData(bc, itm);
                 if(itm != NULL){
                      itm->hdr.lastProcessTime = clock_time();
+                     itm->hdr.hopCount++;
                     
                      // Reset the send data timer
                     if(ctimer_expired(&(bc->send_timer))) {
@@ -226,6 +227,8 @@ static void recv_from_broadcast(struct broadcast_conn *c,
                //If it is Sink
                PRINTF("DEBUG: Sink Received a new data packet, user will be notified, total delay(ms)=%x\n", dm->hdr.delay);
                
+               uint8_t hopCount = dm->hdr.hopCount;
+
                //Save the message
                struct bcp_queue_item pk;
                memcpy(&pk, dm, dm->data_length);
@@ -241,7 +244,7 @@ static void recv_from_broadcast(struct broadcast_conn *c,
                         
                //Notify user callback
                if(bc->cb->recv != NULL)
-                  bc->cb->recv(bc, &pk.hdr.origin);
+                  bc->cb->recv(bc, &pk.hdr.origin, hopCount);
                else 
                   PRINTF("ERROR: BCP cannot notify user as the receive callback function is not set.\n");
                
@@ -470,6 +473,7 @@ static void send_beacon(void *ptr)
     //Sets the fields of the new record
     newRow.next = NULL;
     newRow.hdr.bcp_backpressure = 0;
+    newRow.hdr.hopCount = 0; 
     newRow.data_length = packetbuf_datalen();
     memcpy(newRow.data, packetbuf_dataptr(), newRow.data_length);
     
@@ -508,7 +512,7 @@ static void send_beacon(void *ptr)
     
     
     //Make sure queuebuf is not null
-    if(1 != NULL) {
+    if(i != NULL) {
         //Find the best neighbor to send
         rimeaddr_t* neighborAddr = routingtable_find_routing(&c->routing_table);
         
@@ -538,6 +542,7 @@ static void send_beacon(void *ptr)
         i->hdr.bcp_backpressure = bcp_queue_length(&c->packet_queue); 
         i->hdr.delay = i->hdr.delay + clock_time() - i->hdr.lastProcessTime;
         i->hdr.lastProcessTime = i->hdr.lastProcessTime;
+        PRINTF("HOPCOUNT:func send_packet %d\n", i->hdr.hopCount);
         i->data_length = sizeof(struct bcp_queue_item);
         
         
@@ -695,6 +700,8 @@ int bcp_send(struct bcp_conn *c){
         rimeaddr_copy(&(qi->hdr.origin), &rimeaddr_node_addr);
         qi->hdr.delay = 0;
         qi->hdr.lastProcessTime = clock_time();
+        qi->hdr.hopCount = 1;
+        PRINTF("HOPCOUNT:func bcp_send %d\n", qi->hdr.hopCount);
         // We have data to send, stop beaconing
         ctimer_stop(&c->beacon_timer);
         result = 1;
