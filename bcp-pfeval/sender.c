@@ -16,18 +16,21 @@ AUTOSTART_PROCESSES(&sender_process);
 /**********************************************************************/
 void send_packet(void *v)
 {
-    static uint16_t send_num = 0;
-    PRINTF("Call send function.\n");
-    packetbuf_copyfrom("Hi",2);
+    static uint16_t send_num = 1;
+    struct app_msg msg;
+    msg.seqno = send_num;
+    memcpy(msg.data, "Hi BCP.", sizeof(msg.data) - 2);
+    PRINTF("SEND pakcet NO %u\n", send_num);
+    packetbuf_copyfrom(&msg, sizeof(msg));
     bcp_send(&bcp);
     send_num ++;
 }
 /**********************************************************************/
 void sent_bcp(struct bcp_conn *c, uint8_t backpressure)
 {
-    PRINTF("SENT callback. ");
-    PRINTF("data='%s' length = %d backlog= %d\n",
-                (char*)packetbuf_dataptr(),
+    struct app_msg *msg = (struct app_msg *)packetbuf_dataptr();
+    PRINTF("SENT callback: data='%s' length = %d backlog= %u\n",
+                msg->data,
                 packetbuf_datalen(),
                 backpressure);
 }
