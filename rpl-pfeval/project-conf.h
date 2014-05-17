@@ -6,7 +6,7 @@
 #define UDP_SINK_PORT 8888
 
 #ifndef SEND_INTERVAL
-#define SEND_INTERVAL (10 * CLOCK_SECOND)
+#define SEND_INTERVAL 4
 #endif
 #define MAX_PAYLOAD_LEN 30
 
@@ -49,3 +49,8 @@ struct app_msg{
 #define MACRO(s, ...) printf(s, ##__VA_ARGS__)
 
 #endif
+
+
+
+
+

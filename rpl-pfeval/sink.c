@@ -60,14 +60,16 @@ static void tcpip_handler(void)
 
     if(uip_newdata())
     {
-        PRINTF("DATA received from %d\n",
-            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]);
-
         appdata = (struct app_msg*) uip_appdata;
         seqno = appdata->seqno;
         hops = uip_ds6_if.cur_hop_limit - UIP_IP_BUF->ttl + 1;
         sender.u8[0] = UIP_IP_BUF->srcipaddr.u8[15];
         sender.u8[1] = UIP_IP_BUF->srcipaddr.u8[15];
+
+        PRINTF("DATA received from %d NO %d\n",
+            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],
+            seqno);
+
         PRINTF("PayloadLen %u\n", 8 + uip_datalen() / 2);
         PRINTF("ori seq hop:%u %u %u\n", sender.u8[0] + (sender.u8[1]<<8),
                         seqno, hops);

@@ -142,6 +142,9 @@ static void send_packet(void *ptr)
                            &sink_ipaddr, UIP_HTONS(UDP_SINK_PORT));
     PRINTF("DATA send NO %d to %d * msg size %u\n", seqno,
                 sink_ipaddr.u8[sizeof(sink_ipaddr.u8) - 1], sizeof(msg));
+    PRINTF("Sink addr : ");
+    PRINT6ADDR(&sink_ipaddr);
+    PRINTF("\n");
                 
 }
 /***********************************************************************/
@@ -173,7 +176,7 @@ PROCESS_THREAD(sender_process, ev, data)
     PRINTF(" local/remote port %u/%u\n", UIP_HTONS(sender_conn->lport),
                 UIP_HTONS(sender_conn->rport));
 
-    etimer_set(&periodic, SEND_INTERVAL);
+    etimer_set(&periodic, SEND_INTERVAL * CLOCK_SECOND);
     while(1) {
         PROCESS_YIELD();
         if(ev == tcpip_event)
@@ -182,7 +185,7 @@ PROCESS_THREAD(sender_process, ev, data)
         if(etimer_expired(&periodic))
         {
             etimer_reset(&periodic);
-            ctimer_set(&backoff_timer, RANDWAIT, send_packet, NULL);
+            ctimer_set(&backoff_timer, RANDWAIT * CLOCK_SECOND, send_packet, NULL);
         }
     }
 
